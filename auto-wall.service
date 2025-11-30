@@ -1,0 +1,13 @@
+[Unit]
+Description=Auto wallpaper rotator (random every 30 min)
+After=graphical-session.target
+
+[Service]
+Type=simple
+ExecStart=%h/FIX-THIS-DIR/auto_wall.sh
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=default.target
+
