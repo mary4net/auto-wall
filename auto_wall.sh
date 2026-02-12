@@ -6,10 +6,14 @@ nochange=false
 IMG=$(find "$WALLDIR" -maxdepth 1 -type f | shuf -n1)
 TIME=1800
 
+PIDFILE="/tmp/auto_wall.pid"
+
+# 业务逻辑
+pkill swaybg
+
 help='''
       Usage:  ./auto_wall.sh [OPTIONS]
-
-      By deault, it change your background via swaybg every 30 min.
+By deault, it change your background via swaybg every 30 min.
 
       Options:
       -n, --nochange, --no_change     dont change the wallpaper.
@@ -38,6 +42,16 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
+
+# 如果 PID 文件存在，杀掉旧进程
+if [ -f $PIDFILE ]; then
+    old_pid=$(cat $PIDFILE)
+    # 确保进程确实存在再杀，避免误杀重用的 PID
+    kill $old_pid 2>/dev/null
+fi
+
+# 将当前脚本 PID 写入文件
+echo $$ > $PIDFILE
 
 if [[ $nochange == 'true' ]]; then
   pkill swaybg
